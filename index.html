@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gölgedeki Kasa – Bir Kapalı Oda Gizemi</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- BAŞLANGIÇ EKRANI -->
+  <div id="screen-intro" class="screen active">
+    <div class="intro-content">
+      <div class="case-stamp">DAVA DOSYASI #1</div>
+      <h1 class="title-main">GÖLGEDEKİ KASA</h1>
+      <p class="title-sub">Bir Kapalı Oda Gizemi</p>
+      <div class="divider"></div>
+      <p class="intro-text">
+        Gece yarısını çoktan geçmişti. Telefon çaldığında dedektif masasında uyukluyordum.<br><br>
+        Cinayet. Kapalı bir oda. Tek kurban.<br>
+        Ve içeriden kilitlenen bir kasa.
+      </p>
+      <button class="btn-primary" onclick="Game.startGame()">DAVAYI KABUL ET</button>
+    </div>
+  </div>
+
+  <!-- OYUN ALANI -->
+  <div id="screen-game" class="screen">
+
+    <!-- ÜST BAR -->
+    <header class="game-header">
+      <div class="header-left">
+        <span class="case-label">DAVA: GÖLGEDEKİ KASA</span>
+        <span id="chapter-label" class="chapter-label">BÖLÜM 1</span>
+      </div>
+      <div class="header-center">
+        <div class="notebook-tab" onclick="Game.toggleNotebook()">
+          📓 NOTLARIM <span id="clue-count">(0)</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <span id="location-label" class="location-label">&#128205; Dukkan Girisi</span>
+      </div>
+    </header>
+
+    <!-- ANA OYUN ALANI -->
+    <main class="game-main">
+
+      <!-- SOL: SAHNE -->
+      <section class="scene-panel">
+        <div id="scene-image-container" class="scene-image-container">
+          <canvas id="scene-canvas" width="640" height="420"></canvas>
+          <div id="hotspot-layer" class="hotspot-layer"></div>
+        </div>
+        <div id="scene-description" class="scene-description">
+          Elias Thorne'un antika dükkanının önündesiniz. Polis şeritleri kapıyı çevreliyor.
+        </div>
+      </section>
+
+      <!-- SAĞ: DİYALOG / AKSİYON PANELİ -->
+      <aside class="action-panel">
+        <div id="dialog-box" class="dialog-box">
+          <div id="dialog-speaker" class="dialog-speaker">Dedektif</div>
+          <div id="dialog-text" class="dialog-text">Nereye bakmak istersiniz?</div>
+        </div>
+
+        <div id="action-buttons" class="action-buttons">
+          <!-- JS tarafından doldurulacak -->
+        </div>
+
+        <div id="inventory-bar" class="inventory-bar">
+          <span class="inv-label">🎒 Eşyalar:</span>
+          <div id="inventory-items" class="inventory-items">
+            <span class="inv-empty">Boş</span>
+          </div>
+        </div>
+      </aside>
+
+    </main>
+  </div>
+
+  <!-- NOT DEFTERİ OVERLAY -->
+  <div id="notebook-overlay" class="notebook-overlay hidden">
+    <div class="notebook-inner">
+      <div class="notebook-header">
+        <span>📓 Dedektifin Not Defteri</span>
+        <button class="btn-close" onclick="Game.toggleNotebook()">✕</button>
+      </div>
+      <!-- Sekmeler -->
+      <div class="notebook-tabs">
+        <button class="nb-tab active" onclick="Game.switchNotebookTab('clues', this)">🔍 İpuçları</button>
+        <button class="nb-tab" onclick="Game.switchNotebookTab('suspects', this)">👤 Şüpheliler</button>
+        <button class="nb-tab" onclick="Game.switchNotebookTab('timeline', this)">🕐 Zaman Çizelgesi</button>
+      </div>
+      <div id="notebook-content" class="notebook-content">
+        <p class="notebook-empty">Henüz hiçbir ipucu toplanmadı.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SORGULAMA MODAL -->
+  <div id="interrogation-overlay" class="interrogation-overlay hidden">
+    <div class="interrogation-inner">
+      <div class="interrogation-header">
+        <div id="suspect-badge" class="suspect-badge"></div>
+        <div class="suspect-info">
+          <div id="suspect-name" class="suspect-name"></div>
+          <div id="suspect-title" class="suspect-title"></div>
+        </div>
+        <button class="btn-close" onclick="Game.closeInterrogation()">✕</button>
+      </div>
+      <div class="interrogation-body">
+        <div id="interrogation-dialog" class="interrogation-dialog">
+          <div id="interr-speaker" class="interr-speaker"></div>
+          <div id="interr-text" class="interr-text"></div>
+        </div>
+        <div id="interrogation-questions" class="interrogation-questions">
+          <!-- sorular JS tarafından doldurulacak -->
+        </div>
+      </div>
+      <div id="suspect-status-bar" class="suspect-status-bar">
+        <span id="suspect-status-text" class="suspect-status-text"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BÖLÜM GEÇİŞ OVERLAY -->
+  <div id="chapter-transition" class="chapter-transition hidden">
+    <div class="chapter-transition-inner">
+      <div id="ct-stamp" class="ct-stamp"></div>
+      <h2 id="ct-title"></h2>
+      <p id="ct-text"></p>
+      <button class="btn-primary" id="ct-btn" onclick="Game.proceedChapter()">DEVAM ET</button>
+    </div>
+  </div>
+
+  <!-- SONUÇ OVERLAY -->
+  <div id="result-overlay" class="result-overlay hidden">
+    <div class="result-inner">
+      <div id="result-icon" class="result-icon">🔍</div>
+      <h2 id="result-title"></h2>
+      <div id="result-text"></div>
+      <div id="result-actions" class="result-actions">
+        <button class="btn-primary" onclick="Game.restartGame()">TEKRAR OYNA</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENVANTER DETAY OVERLAY -->
+  <div id="item-detail-overlay" class="item-detail-overlay hidden">
+    <div class="item-detail-inner">
+      <div class="item-detail-header">
+        <span id="item-detail-name" class="item-detail-name"></span>
+        <button class="btn-close" onclick="Game.closeItemDetail()">X</button>
+      </div>
+      <div id="item-detail-text" class="item-detail-text"></div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
