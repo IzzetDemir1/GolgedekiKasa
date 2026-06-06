@@ -1,5 +1,7 @@
 GÖLGEDEKİ KASA: Bir Kapalı Oda Gizemi
 
+ https://izzetdemir1.github.io/GolgedekiKasa/
+
 Şantajcı bir antika restoratörü olan Elias Thorne, içeriden kilitli devasa bir çelik kasanın içinde zehirlenmiş olarak ölü bulunur. Başka hiçbir giriş ve çıkışın olmadığı bu kusursuz "kapalı oda" cinayetinde katil kim?
 
 Bu web tabanlı point-and-click dedektiflik oyununda, zamanınız daralırken olay yerini incelemeli, kanıtları toplamalı ve şüphelileri sorgulamalısınız. Ancak dikkatli olun; attığınız her yanlış adım ve sunduğunuz her asılsız delil size zaman kaybettirecek.
